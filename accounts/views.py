@@ -2,12 +2,16 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer import FacultySerializer
+from rest_framework.permissions import IsAuthenticated
+from .serializer import FacultySerializer,LoginSerializer,UserAccountSerializer
+from .models import Faculty,UserAccount
+from middleware.custom_premission import HigherAuthoritiesPremission
 from utils.generateJWT import generate
+from utils.checkAuthentication import checkAuth
 # Create your views here.
 class registerFacultyView(generics.CreateAPIView):
     serializer_class = FacultySerializer
-
+    permission_classes = [HigherAuthoritiesPremission]
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
@@ -18,3 +22,36 @@ class registerFacultyView(generics.CreateAPIView):
             
         else:
             return Response({"status":"failed",},status=400)
+        
+
+class userView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self,request):
+        user = request.user
+        if user is not None:
+            if user.role == 'HOD' or user.role == 'DI' or user.role == 'Assistant Professor' or user.role == 'professor':
+                fac = Faculty.objects.get(faculty_user = user)
+                fac_ser = FacultySerializer(fac)
+                return Response({"user":fac_ser.data},status=200)
+            else:
+                return Response({'user':UserAccountSerializer(user).data},status=200)
+        return Response({"message":"user not found"},status=400)
+    
+
+class LoginView(generics.CreateAPIView):
+    serializer_class = LoginSerializer
+    def post(self,request):
+        # login_ser = LoginSerializer(data = request.data)
+        login_ser = self.get_serializer(data = request.data)
+        if login_ser.is_valid(raise_exception=True):
+            username = login_ser.data['username']
+            password = login_ser.data['password']
+            user = checkAuth(username=username,password=password)
+            if user is not None:
+                token = generate(user=user)
+                return Response({"status":"success","token":token},status=201) 
+        
+        return Response({"Error":"Login Failed"})
+        
+    

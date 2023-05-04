@@ -33,3 +33,8 @@ class FacultySerializer(serializers.ModelSerializer):
             return user
         else:
             return None
+        
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
