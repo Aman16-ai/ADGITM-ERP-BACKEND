@@ -12,7 +12,8 @@ role_choice = [
     ("DI","DI"),
     ("Professor","Professor"),
     ("Assistant Professor","Assistant Professor"),
-    ("Student","Student")
+    ("Student","Student"),
+    ("MM","MM")
 ]
 
 department_choice = [

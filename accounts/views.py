@@ -53,5 +53,14 @@ class LoginView(generics.CreateAPIView):
                 return Response({"status":"success","token":token},status=201) 
         
         return Response({"Error":"Login Failed"})
+    
+
+class registerUser(generics.CreateAPIView):
+    queryset = UserAccount.objects.all()
+    serializer_class = UserAccountSerializer
+    permission_classes = [HigherAuthoritiesPremission]
+
+    # todo : generate token also same as register faculty
+    
         
     
