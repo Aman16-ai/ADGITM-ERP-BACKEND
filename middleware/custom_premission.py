@@ -10,3 +10,13 @@ class HigherAuthoritiesPremission(permissions.BasePermission):
             return True
         else:
             return request.user.groups.filter(name="Higher Authorities").exists()
+        
+class MaintenanceManagementPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if(isinstance(request.user,AnonymousUser)):
+            return False
+        if(request.method == 'GET'):
+            return True
+        else:
+            return request.user.groups.filter(name='Maintenance Manager').exists()
