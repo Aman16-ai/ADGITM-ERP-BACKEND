@@ -12,3 +12,8 @@ class MaintenanceIssueSerializer(serializers.ModelSerializer):
         obj = MaintenanceIssue(created_by = user, **validated_data)
         obj.save()
         return obj
+    
+
+class MaintenanceIssueStatusAndCountSerializer(serializers.Serializer):
+    status = serializers.CharField()
+    count = serializers.IntegerField()

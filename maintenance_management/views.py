@@ -1,9 +1,12 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets,views
 from rest_framework.response import Response
 from .models import MaintenanceIssue
-from .serializer import MaintenanceIssueSerializer
+from .serializer import MaintenanceIssueSerializer, MaintenanceIssueStatusAndCountSerializer
 from middleware.custom_premission import MaintenanceManagementPermission
+from rest_framework.permissions import IsAuthenticated
+from django.db.models import Count
+from rest_framework import status
 # Create your views here.
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
@@ -32,3 +35,16 @@ class MaintenanceIssueViewSet(viewsets.ModelViewSet):
             'request': getattr(self, 'request', None)
         }
 
+class MaintenanceIssueStatusAndCountView(views.APIView):
+    # permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        try:
+            statusAndCounts = MaintenanceIssue.objects.values('status').annotate(count=Count('status'))
+            data = MaintenanceIssueStatusAndCountSerializer(statusAndCounts,many=True)
+            return Response({'status':'success','Response':data.data},status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'status':'Failed',
+                'Error' : e
+            },status=status.HTTP_500_INTERNAL_SERVER_ERROR,)

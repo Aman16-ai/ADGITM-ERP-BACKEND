@@ -8,6 +8,7 @@ from .models import Faculty,UserAccount
 from middleware.custom_premission import HigherAuthoritiesPremission
 from utils.generateJWT import generate
 from utils.checkAuthentication import checkAuth
+from rest_framework import status
 # Create your views here.
 class registerFacultyView(generics.CreateAPIView):
     serializer_class = FacultySerializer
@@ -33,9 +34,9 @@ class userView(APIView):
             if user.role == 'HOD' or user.role == 'DI' or user.role == 'Assistant Professor' or user.role == 'professor':
                 fac = Faculty.objects.get(faculty_user = user)
                 fac_ser = FacultySerializer(fac)
-                return Response({"user":fac_ser.data},status=200)
+                return Response({'status': status.HTTP_200_OK,"Response":fac_ser.data},status=status.HTTP_200_OK)
             else:
-                return Response({'user':UserAccountSerializer(user).data},status=200)
+                return Response({'status': status.HTTP_200_OK,'Response':UserAccountSerializer(user).data},status=status.HTTP_200_OK)
         return Response({"message":"user not found"},status=400)
     
 
@@ -50,7 +51,7 @@ class LoginView(generics.CreateAPIView):
             user = checkAuth(username=username,password=password)
             if user is not None:
                 token = generate(user=user)
-                return Response({"status":"success","token":token},status=201) 
+                return Response({"status":status.HTTP_201_CREATED,"Response":token},status=201) 
         
         return Response({"Error":"Login Failed"})
     
@@ -60,7 +61,7 @@ class registerUser(generics.CreateAPIView):
     serializer_class = UserAccountSerializer
     permission_classes = [HigherAuthoritiesPremission]
 
-    # todo : generate token also same as register faculty
+    # todo : generate token also same as register facult
     
         
     

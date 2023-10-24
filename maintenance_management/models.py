@@ -8,7 +8,7 @@ maintenance_choices = [
 ]
 issue_status_choices = [
     ('Pending','Pending'),
-    ('Hold','Hold'),
+    ('Progress','Progress'),
     ('Completed','Completed'),
     ('Rejected','Rejected')
 ]
