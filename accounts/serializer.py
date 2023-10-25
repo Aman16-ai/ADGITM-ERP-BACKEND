@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserAccount,Faculty
 from .services.RegisterService import RegisterService
-
+from departmenant_managnement.models import Department
 class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
@@ -14,6 +14,7 @@ class UserAccountSerializer(serializers.ModelSerializer):
 
 class FacultySerializer(serializers.ModelSerializer):
     faculty_user = UserAccountSerializer()
+    department = serializers.PrimaryKeyRelatedField(queryset=Department.objects.all())
     class Meta:
         model = Faculty
         fields = "__all__"

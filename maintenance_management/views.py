@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets,views
 from rest_framework.response import Response
 from .models import MaintenanceIssue
-from .serializer import MaintenanceIssueSerializer, MaintenanceIssueStatusAndCountSerializer
+from .serializer import MaintenanceIssueSerializer, MaintenanceIssueStatusAndCountSerializer,GetMaintenanceIssueSerializer
 from middleware.custom_premission import MaintenanceManagementPermission
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count
@@ -11,9 +11,18 @@ from rest_framework import status
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceIssue.objects.all()
-    serializer_class = MaintenanceIssueSerializer
+    # serializer_class = MaintenanceIssueSerializer
     permission_classes = [MaintenanceManagementPermission]
 
+    serializers = {
+        'list':    GetMaintenanceIssueSerializer,
+        'create': MaintenanceIssueSerializer
+        # etc.
+    }
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return self.serializers['list']
+        return self.serializers['create']
     def finalize_response(self, request, response, *args, **kwargs):
         final_response = Response({"status":response.status_code,"Response":response.data})
         final_response.accepted_renderer = request.accepted_renderer
