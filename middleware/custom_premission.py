@@ -18,5 +18,7 @@ class MaintenanceManagementPermission(permissions.BasePermission):
             return False
         if(request.method == 'GET'):
             return True
+        elif(request.method == 'PUT' or request.method == 'PATCH' or request.method == 'DELETE'):
+            return request.user.role == 'MM'
         else:
             return request.user.groups.filter(name='Maintenance Manager').exists()

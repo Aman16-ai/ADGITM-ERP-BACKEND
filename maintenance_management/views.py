@@ -6,7 +6,9 @@ from .serializer import MaintenanceIssueSerializer, MaintenanceIssueStatusAndCou
 from middleware.custom_premission import MaintenanceManagementPermission
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Count
+from django.utils.dateparse import parse_date
 from rest_framework import status
+from django.db.models import Q
 # Create your views here.
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
@@ -49,7 +51,16 @@ class MaintenanceIssueStatusAndCountView(views.APIView):
 
     def get(self,request):
         try:
-            statusAndCounts = MaintenanceIssue.objects.values('status').annotate(count=Count('status'))
+            start_date = self.request.query_params.get('start_date')
+            end_date = self.request.query_params.get('end_date')
+            print(f'start date : {start_date} end_dat : {end_date}')
+            statusAndCounts = []
+            if start_date and end_date:
+                start_date = parse_date(start_date)
+                end_date = parse_date(end_date)
+                statusAndCounts = MaintenanceIssue.objects.filter(Q(created_at__gte=start_date) & Q(created_at__lte=end_date)).values('status').annotate(count=Count('status'))
+            else:
+                statusAndCounts = MaintenanceIssue.objects.all().values('status').annotate(count=Count('status'))
             data = MaintenanceIssueStatusAndCountSerializer(statusAndCounts,many=True)
             return Response({'status':'success','Response':data.data},status=status.HTTP_200_OK)
         except Exception as e:
