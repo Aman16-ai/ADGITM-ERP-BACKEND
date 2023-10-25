@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group, PermissionsMixin
 from django.contrib.auth.models import AbstractBaseUser, UserManager
+from departmenant_managnement.models import Department
 # Create your models here.
 
 role_choice = [
@@ -72,7 +73,7 @@ class Faculty(models.Model):
     id = models.AutoField(primary_key=True,unique=True)
     faculty_id = models.CharField(max_length=50,unique=True)
     faculty_user = models.OneToOneField(UserAccount,on_delete=models.CASCADE,related_name="user_fac")
-    department = models.CharField(choices=department_choice,max_length=80)
+    department = models.ForeignKey(Department,on_delete=models.SET_NULL,null=True,blank=True)
     joined_at = models.DateField()
     salary = models.PositiveIntegerField()
     last_promotion_on = models.DateField(null=True,blank=True)

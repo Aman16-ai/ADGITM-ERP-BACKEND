@@ -10,6 +10,9 @@ class RegisterService:
         if(user_acc['role'] in ['Manager','Owner','Director','HOD','DI','CEO']):
             group = Group.objects.get(name="Higher Authorities")
             user.groups.add(group)
+        if(user_acc['role'] == 'HOD' or user_acc['role'] == 'MM'):
+            group = Group.objects.get(name="Maintenance Manager")
+            user.groups.add(group)
         return user
     def registerFaculty(self,user_data,user):
         print(user_data)
