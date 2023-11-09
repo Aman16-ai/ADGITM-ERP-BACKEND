@@ -30,3 +30,15 @@ class MaintenanceIssue(models.Model):
 
     def __str__(self) -> str:
         return self.maintenanceType.name + " " + self.status
+    
+
+class MaintenanceIssueComment(models.Model):
+    id = models.AutoField(primary_key=True)
+    commented_by = models.ForeignKey(UserAccount,on_delete=models.CASCADE)
+    maintenanceIssue = models.ForeignKey(MaintenanceIssue,on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return self.commented_by.username + " " + self.comment
+    

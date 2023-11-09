@@ -49,6 +49,7 @@ class LoginView(generics.CreateAPIView):
             username = login_ser.data['username']
             password = login_ser.data['password']
             user = checkAuth(username=username,password=password)
+            print('user ------> ',user)
             if user is not None:
                 token = generate(user=user)
                 return Response({"status":status.HTTP_201_CREATED,"Response":token},status=201) 

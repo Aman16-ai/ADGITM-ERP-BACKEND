@@ -18,5 +18,8 @@ class MaintenanceManagementPermission(permissions.BasePermission):
             return False
         if(request.method == 'GET'):
             return True
+        elif(request.method == 'POST' and request.user.groups.filter(name='Higher Authorities')):
+            return True
         else:
             return request.user.groups.filter(name='Maintenance Manager').exists()
+        
