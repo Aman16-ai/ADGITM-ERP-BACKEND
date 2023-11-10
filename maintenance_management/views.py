@@ -9,6 +9,7 @@ from django.db.models import Count
 from django.utils.dateparse import parse_date
 from rest_framework import status
 from django.db.models import Q
+from django_filters import rest_framework as filter
 # Create your views here.
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
@@ -72,7 +73,6 @@ class MaintenanceIssueStatusAndCountView(views.APIView):
 class MaintenanceTypeViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceType.objects.all()
     serializer_class = MaintenanceTypeModelSerializer
-
     def finalize_response(self, request, response, *args, **kwargs):
         final_response = Response({"status":response.status_code,"Response":response.data})
         final_response.accepted_renderer = request.accepted_renderer
@@ -99,6 +99,10 @@ class MaintenanceIssueCommentViewSet(viewsets.ModelViewSet):
     queryset = MaintenanceIssueComment.objects.all()
     # serializer_class = MaintenaceIssueCommentSerializer
     permission_classes = [MaintenanceManagementPermission]
+    filter_backends = (filter.DjangoFilterBackend,)
+    filterset_fields = {
+        'maintenanceIssue':['exact'],
+    }
 
     serializers = {
         'list':    GetMaintenaceIssueCommentSerializer,
