@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'departmenant_managnement.apps.DepartmenantManagnementConfig',
     'maintenance_management.apps.MaintenanceManagementConfig',
-    'corsheaders'
+    'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -140,7 +141,10 @@ CORS_ALLOW_ALL_ORIGINS = True
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+     'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
 }
 
 SIMPLE_JWT = {
