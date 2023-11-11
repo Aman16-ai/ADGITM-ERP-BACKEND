@@ -10,6 +10,7 @@ from django.utils.dateparse import parse_date
 from rest_framework import status
 from django.db.models import Q
 from django_filters import rest_framework as filter
+from rest_framework.decorators import action
 # Create your views here.
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
@@ -22,6 +23,19 @@ class MaintenanceIssueViewSet(viewsets.ModelViewSet):
         'create': MaintenanceIssueSerializer
         # etc.
     }
+    def get_queryset(self):
+        if('start_date' in self.request.GET and 'end_date' in self.request.GET):
+            start_date = self.request.GET['start_date']
+            end_date = self.request.GET['end_date']
+            print(f'start date : {start_date} end_dat : {end_date}')
+            if start_date and end_date:
+                start_date = parse_date(start_date)
+                end_date = parse_date(end_date)
+                data = MaintenanceIssue.objects.filter(Q(created_at__gte=start_date) & Q(created_at__lte=end_date))
+                print(data)
+                return data
+        print(self.request.GET)
+        return super().get_queryset()
     def get_serializer_class(self):
         if self.action == 'list':
             return self.serializers['list']
