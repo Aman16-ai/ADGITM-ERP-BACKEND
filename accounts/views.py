@@ -3,22 +3,33 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from .serializer import FacultySerializer,LoginSerializer,UserAccountSerializer
+from .serializer import FacultySerializer,LoginSerializer,UserAccountSerializer,GetFacultySerializer
 from .models import Faculty,UserAccount
 from middleware.custom_premission import HigherAuthoritiesPremission
 from utils.generateJWT import generate
 from utils.checkAuthentication import checkAuth
 from rest_framework import status
 # Create your views here.
-class registerFacultyView(generics.CreateAPIView):
-    serializer_class = FacultySerializer
+class registerFacultyView(generics.ListCreateAPIView):
+    queryset = Faculty.objects.all()
+    # serializer_class = FacultySerializer
     permission_classes = [HigherAuthoritiesPremission]
+
+    serializers = {
+        'GET':    GetFacultySerializer,
+        'POST': FacultySerializer
+        # etc.
+    }
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return self.serializers['GET']
+        return self.serializers['POST']
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             print("user --> ",user)
-            if user is not None:
+            if user is not None:               
                 return Response({"status":"success","token":generate(user)},status=201)
             
         else:

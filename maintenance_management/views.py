@@ -41,7 +41,7 @@ class MaintenanceIssueViewSet(viewsets.ModelViewSet):
             return self.serializers['list']
         return self.serializers['create']
     def finalize_response(self, request, response, *args, **kwargs):
-        final_response = Response({"status":response.status_code,"Response":response.data})
+        final_response = Response({"status":response.status_code,"Response":response.data},status=response.status_code)
         final_response.accepted_renderer = request.accepted_renderer
         final_response.accepted_media_type = request.accepted_media_type
         final_response.renderer_context = self.get_renderer_context()

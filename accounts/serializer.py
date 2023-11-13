@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import UserAccount,Faculty
 from .services.RegisterService import RegisterService
 from departmenant_managnement.models import Department
+from .services.EmailService import EmailService
 class UserAccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserAccount
@@ -18,7 +19,6 @@ class FacultySerializer(serializers.ModelSerializer):
     class Meta:
         model = Faculty
         fields = "__all__"
-    
 
     def create(self, validated_data):
         user_val_data = validated_data.pop('faculty_user')
@@ -30,11 +30,20 @@ class FacultySerializer(serializers.ModelSerializer):
         if user is not None:
             register_ser = RegisterService()
             faculty_result = register_ser.registerFaculty(user_data=validated_data,user=user)
+            print('user data ---> ',user_val_data.get('email'))
+            # recipient_list = [user_val_data.get('email')]
+            # emailService = EmailService("Registration confirmation Email",recipient_list)
+            # emailService.sendRegistrationEmail(user_val_data.get("username"),user_val_data.get('password'))
         if user is not None and faculty_result is not None:
             return user
         else:
             return None
         
+class GetFacultySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Faculty
+        fields = "__all__"
+        depth=1
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
