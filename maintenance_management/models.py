@@ -26,7 +26,7 @@ class MaintenanceIssue(models.Model):
     department = models.ForeignKey(Department,on_delete=models.CASCADE,null=True,blank=True)
     description = models.TextField()
     status = models.CharField(choices=issue_status_choices,max_length=20,default='Pending')
-    created_at = models.DateField(auto_created=True,auto_now=True,blank=True,null=True)
+    created_at = models.DateField(auto_now_add=True,blank=True,null=True)
 
     def __str__(self) -> str:
         return self.maintenanceType.name + " " + self.status
