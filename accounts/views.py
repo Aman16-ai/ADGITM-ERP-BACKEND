@@ -30,7 +30,7 @@ class registerFacultyView(generics.ListCreateAPIView):
             user = serializer.save()
             print("user --> ",user)
             if user is not None:               
-                return Response({"status":"success","token":generate(user)},status=201)
+                return Response({"status":status.HTTP_201_CREATED,"token":generate(user)},status=201)
             
         else:
             return Response({"status":"failed",},status=400)
