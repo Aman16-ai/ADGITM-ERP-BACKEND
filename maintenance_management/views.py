@@ -11,6 +11,7 @@ from rest_framework import status
 from django.db.models import Q
 from django_filters import rest_framework as filter
 from rest_framework.decorators import action
+
 # Create your views here.
 
 class MaintenanceIssueViewSet(viewsets.ModelViewSet):
@@ -23,6 +24,32 @@ class MaintenanceIssueViewSet(viewsets.ModelViewSet):
         'create': MaintenanceIssueSerializer
         # etc.
     }
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if('status' in request.data):
+            issue_status = request.data['status']
+            print(f"user {request.user.role}")
+            print(f"instance {instance.status} update status {issue_status}")
+            if (issue_status == 'Verified' and request.user.role != 'MM' and instance.status == 'Completed') or (issue_status == 'Unverified' and request.user.role != 'MM' and instance.status == 'Verified'):
+                #Here we can update the status to verified
+                if(issue_status == 'Unverified'):
+                    request.data['status'] = 'Completed'
+                serializer = self.get_serializer(instance,data=request.data,partial=True)
+                serializer.is_valid(raise_exception=True)
+                self.perform_update(serializer=serializer)
+                return Response(serializer.data)
+            elif issue_status in ['Verified','Unverified'] and request.user.role == 'MM':
+                return Response({'Message':"You don't have permission to verify the issue"},status=status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+            elif issue_status == 'Verified' and instance.status in ['Completed','Pending','Rejected','Progress']:
+                return Response({'Message':'Only completed issues can verified'},status=status.HTTP_403_FORBIDDEN)
+            elif issue_status == 'Unverified' and instance.status in ['Completed','Pending','Rejected','Progress']:
+                return Response({'Message':'Only verified issues can unverified'},status=status.HTTP_403_FORBIDDEN)
+            
+
+
+        return super().partial_update(request, *args, **kwargs)
+    
     def get_queryset(self):
         if('start_date' in self.request.GET and 'end_date' in self.request.GET):
             start_date = self.request.GET['start_date']
