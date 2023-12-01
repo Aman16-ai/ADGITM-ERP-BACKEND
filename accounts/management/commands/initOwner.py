@@ -6,10 +6,10 @@ class Command(BaseCommand):
 
     def handle(self, *args: Any, **options: Any) -> str | None:
         try:
-            user = UserAccount(username="Adit1234",first_name="Adit",last_name="Saxena",email="adit1234@gmail.com",role="Admin")
+            user = UserAccount(username="aman7531",first_name="Aman",last_name="Saxena",email="asaxena7531@gmail.com",role="Owner")
             user.set_password("saxena7531")
             user.save()
-            print("Admin created successfully")
+            print("Onwer created successfully")
         except Exception as e:
             print(e)
 

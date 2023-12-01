@@ -9,6 +9,9 @@ from middleware.custom_premission import HigherAuthoritiesPremission
 from utils.generateJWT import generate
 from utils.checkAuthentication import checkAuth
 from rest_framework import status
+from django_filters import rest_framework as filter
+from .tasks import send_email_task
+from django.core.mail import send_mail
 # Create your views here.
 class registerFacultyView(generics.ListCreateAPIView):
     queryset = Faculty.objects.all()
@@ -38,7 +41,6 @@ class registerFacultyView(generics.ListCreateAPIView):
 
 class userView(APIView):
     permission_classes = [IsAuthenticated]
-    
     def get(self,request):
         user = request.user
         if user is not None:
@@ -68,11 +70,14 @@ class LoginView(generics.CreateAPIView):
         return Response({"Error":"Login Failed"})
     
 
-class registerUser(generics.CreateAPIView):
+class registerUser(generics.ListCreateAPIView):
     queryset = UserAccount.objects.all()
     serializer_class = UserAccountSerializer
     permission_classes = [HigherAuthoritiesPremission]
-
+    filter_backends = (filter.DjangoFilterBackend,)
+    filterset_fields = {
+        'role':['exact'],
+    }
     # todo : generate token also same as register facult
     
         

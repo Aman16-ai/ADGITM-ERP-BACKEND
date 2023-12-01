@@ -11,7 +11,9 @@ issue_status_choices = [
     ('Pending','Pending'),
     ('Progress','Progress'),
     ('Completed','Completed'),
-    ('Rejected','Rejected')
+    ('Rejected','Rejected'),
+    ('Verified','Verified'),
+    ('Approval Pending','Approval Pending')
 ]
 class MaintenanceType(models.Model):
     id = models.AutoField(primary_key=True)
@@ -31,6 +33,10 @@ class MaintenanceIssue(models.Model):
     def __str__(self) -> str:
         return self.maintenanceType.name + " " + self.status
     
+    @staticmethod
+    def getStatusBasedIssues(status):
+        pendingIssues = MaintenanceIssue.objects.filter(status=status)
+        return pendingIssues
 
 class MaintenanceIssueComment(models.Model):
     id = models.AutoField(primary_key=True)

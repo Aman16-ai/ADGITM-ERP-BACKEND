@@ -5,6 +5,7 @@ from departmenant_managnement.models import Department
 # Create your models here.
 
 role_choice = [
+    ("Admin","Admin"),
     ("Manager","Manager"),
     ("Director","Director"),
     ("CEO","CEO"),
@@ -65,6 +66,10 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         default_permissions = ('add', 'view', 'change', 'delete')
+    
+    @staticmethod
+    def getUserBasedOnRole(role):
+        return UserAccount.objects.filter(role=role)
 
 
 

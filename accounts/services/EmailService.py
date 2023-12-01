@@ -8,5 +8,6 @@ class EmailService:
 
     def sendRegistrationEmail(self,username,password):
         message = f"You are successfully register in ADGITM_ERP\n Username : {username} Password {password}"
+        print("running email service message",message)
         send_email_task.delay(self.subject,message,self.recipient_list)
         

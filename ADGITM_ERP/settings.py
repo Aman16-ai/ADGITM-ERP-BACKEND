@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'maintenance_management.apps.MaintenanceManagementConfig',
     'corsheaders',
     'django_filters',
+    'django_celery_results'
 ]
 
 MIDDLEWARE = [
@@ -182,7 +183,7 @@ SIMPLE_JWT = {
 
 #CELERY SETTINGS
 CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERY_RESULT_BACKEND = "django-db"
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -196,7 +197,10 @@ EMAIL_USE_TLS = True
 #add the port number of the email server
 EMAIL_PORT = 587
 #add your gamil here
-EMAIL_HOST_USER = 'asaxena7531@gmail.com'
+EMAIL_HOST_USER = 'amansaxena6523@gmail.com'
 #add your password here
-EMAIL_HOST_PASSWORD = 'saxenaofficial'
-DEFAULT_FROM_EMAIL='Celery asaxena7531@gmail.com'
+EMAIL_HOST_PASSWORD = 'lcitavewmnbxumyw'
+DEFAULT_FROM_EMAIL='Celery <amansaxena6523@gmail.com>'
+
+# celery -A ADGITM_ERP.celery worker --pool=solo -l info
+# celery -A ADGITM_ERP beat -l infoa
