@@ -14,8 +14,8 @@ class UserAccountSerializer(serializers.ModelSerializer):
         user = register_ser.createUser(validated_data)
         if user is not None:
             recipient_list = [validated_data.get('email')]
-            emailService = EmailService("Registration confirmation Email",recipient_list)
-            emailService.sendRegistrationEmail(validated_data.get("username"),validated_data.get('password'))
+            # emailService = EmailService("Registration confirmation Email",recipient_list)
+            # emailService.sendRegistrationEmail(validated_data.get("username"),validated_data.get('password'))
         return user
 
 
@@ -38,8 +38,8 @@ class FacultySerializer(serializers.ModelSerializer):
             faculty_result = register_ser.registerFaculty(user_data=validated_data,user=user)
             print('user data ---> ',user_val_data.get('email'))
             recipient_list = [user_val_data.get('email')]
-            emailService = EmailService("Registration confirmation Email",recipient_list)
-            emailService.sendRegistrationEmail(user_val_data.get("username"),user_val_data.get('password'))
+            # emailService = EmailService("Registration confirmation Email",recipient_list)
+            # emailService.sendRegistrationEmail(user_val_data.get("username"),user_val_data.get('password'))
             # username = user_val_data.get('username')
             # password = user_val_data.get("password")
             # message = f"You are successfully register in ADGITM_ERP\n Username : {username} Password {password}"
