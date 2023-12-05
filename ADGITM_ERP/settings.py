@@ -86,11 +86,18 @@ DATABASES = {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': BASE_DIR / 'db.sqlite3',
 
+        # 'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'ADGITM_ERP_DB',
+        # 'USER': 'root',
+        # 'PASSWORD': '#Saxena7531',
+        # 'HOST': '127.0.0.1',
+        # 'PORT' : '3306'
+
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ADGITM_ERP_DB',
-        'USER': 'root',
+        'NAME': 'Aman6523$default',
+        'USER': 'Aman6523',
         'PASSWORD': '#Saxena7531',
-        'HOST': '127.0.0.1',
+        'HOST': 'Aman6523.mysql.pythonanywhere-services.com',
         'PORT' : '3306'
     }
 }
